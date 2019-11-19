@@ -11,7 +11,7 @@
 	</appender>
 	
 	<!-- Application Loggers -->
-	<logger name="com.board.prac">
+	<logger name="com.pd">
 		<level value="info" />
 	</logger>
 	

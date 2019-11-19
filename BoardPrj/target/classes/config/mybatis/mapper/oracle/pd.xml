@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="config.mybatis.mapper.oracle.pd">
+
+	<sql id="col">
+		no, pdname, price, regdate, (sysdate-regdate) * 24 as NewImgTerm
+	</sql>
+
+	<insert id="insert" parameterType="PdVO">
+		<selectKey keyProperty="no" order="BEFORE" resultType="int">
+			select pd_seq.nextval from dual
+		</selectKey>
+		insert into pd(no, pdname, price)
+		values(#{no}, #{pdName}, #{price})
+	</insert>
+	
+	<select id="detail" parameterType="int" resultType="PdVO">
+		select * from pd where no = #{no}
+	</select>
+	
+	<select id="selectAll" parameterType="SearchVO" resultType="PdVO">
+		select * from
+		(
+			select rownum as RNUM, list.* from (
+				select <include refid="col"/> from pd order by no desc
+			)list
+		)
+		<![CDATA[
+		where RNUM > #{firstRecordIndex}
+		and RNUM <= #{firstRecordIndex} + #{recordCountPerPage}
+		]]>
+	</select>
+	
+	<select id="getTotalRecord" parameterType="SearchVO" resultType="int">
+		select count(*) from pd
+	</select>
+	
+	<update id="edit" parameterType="PdVO">
+		update pd
+		set pdname=#{pdName}, price=#{price}
+		where no=#{no}
+	</update>
+	
+	<delete id="delete" parameterType="int">
+		delete pd where no={no}
+	</delete>
+	
+
+</mapper>
