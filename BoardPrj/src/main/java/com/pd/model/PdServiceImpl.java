@@ -38,4 +38,9 @@ public class PdServiceImpl implements PdService {
 		return pdDao.edit(pdVo);
 	}
 
+	@Override
+	public int delete(int no) {
+		return pdDao.delete(no);
+	}
+
 }

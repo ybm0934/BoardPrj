@@ -46,4 +46,10 @@ public class PdDAOMybatis implements PdDAO {
 		return cnt;
 	}
 
+	@Override
+	public int delete(int no) {
+		int cnt = sqlSession.delete(namespace + "delete", no);
+		return cnt;
+	}
+
 }

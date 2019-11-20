@@ -15,6 +15,6 @@
 등록일 : <fmt:formatDate value="${pdVo.regdate}" pattern="yyyy.MM.dd. HH:mm:ss"/><br><br>
 <a href="#" onclick="location.href='<c:url value='/pd/list.do'/>'">목록</a>&nbsp;
 <a href="#" onclick="location.href='<c:url value='/pd/edit1.do?no=${pdVo.no}'/>'">수정</a>&nbsp;
-<a href="#" onclick="location.href='<c:url value='/pd/delete.do'/>'">삭제</a>
+<a href="#" onclick="location.href='<c:url value='/pd/delete.do?no=${pdVo.no}'/>'">삭제</a>
 </body>
 </html>

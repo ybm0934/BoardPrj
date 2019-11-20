@@ -11,5 +11,6 @@ public interface PdService {
 	public List<PdVO> selectAll(SearchVO searchVo);
 	public int getTotalRecord(SearchVO searchVo);
 	public int edit(PdVO pdVo);
+	public int delete(int no);
 
 }

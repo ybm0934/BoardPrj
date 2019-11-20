@@ -114,4 +114,24 @@ public class PdController {
 		return "inc/message";
 	}
 
+	@RequestMapping("/delete.do")
+	public String delete(@RequestParam(defaultValue = "0") int no, Model model) {
+		logger.info("삭제 처리 파라미터 no={}", no);
+
+		int cnt = pdService.delete(no);
+		logger.info("삭제 처리 결과 cnt={}", cnt);
+
+		String msg = "", url = "/pd/list.do";
+		if (cnt > 0) {
+			msg = "글 삭제 성공";
+		} else {
+			msg = "글 수정 실패";
+		}
+
+		model.addAttribute("msg", msg);
+		model.addAttribute("url", url);
+
+		return "inc/message";
+	}
+
 }

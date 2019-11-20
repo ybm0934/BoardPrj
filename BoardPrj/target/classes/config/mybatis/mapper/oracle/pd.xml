@@ -43,7 +43,7 @@
 	</update>
 	
 	<delete id="delete" parameterType="int">
-		delete pd where no={no}
+		delete pd where no=#{no}
 	</delete>
 	
 
