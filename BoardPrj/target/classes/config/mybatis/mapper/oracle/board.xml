@@ -2,6 +2,28 @@
 <!DOCTYPE mapper PUBLIC "//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="config.mybatis.mapper.oracle.board">
+	
+	<sql id="col">
+		no, memberid, title, regdate, cnt, (sysdate-regdate) * 24 as NewImgTerm 
+	</sql>
 
+	<select id="selectAll" parameterType="SearchVO" resultType="BoardVO">
+		select <include refid="col"/> from board order by no desc
+	</select>
+	
+	<insert id="write" parameterType="BoardVO">
+		insert into board(no, memberid, password, title, email, content, ip, port, browser, filename, originalFileName, filesize)
+		values(board_seq.nextval, #{memberid}, #{password}, #{title}, #{email}, #{content}, #{ip}, #{port}, #{browser}, #{fileName}, #{originalFileName}, #{fileSize})
+	</insert>
+	
+	<update id="downCount" parameterType="int">
+		update board
+		set cnt = cnt + 1
+		where no = #{no}
+	</update>
+
+	<select id="selectByNo" parameterType="int" resultType="BoardVO">
+		select * from board where no = #{no}
+	</select>
 
 </mapper>

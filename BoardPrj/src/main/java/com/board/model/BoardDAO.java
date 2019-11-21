@@ -1,5 +1,15 @@
 package com.board.model;
 
+import java.util.List;
+
+import com.common.SearchVO;
+
 public interface BoardDAO {
+	
+	public List<BoardVO> list(SearchVO searchVo);
+	public int write(BoardVO boardVo);
+	public int downCount(int no);
+	public BoardVO selectByNo(int no);
+	
 
 }
