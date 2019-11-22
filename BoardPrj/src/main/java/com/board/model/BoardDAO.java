@@ -12,5 +12,6 @@ public interface BoardDAO {
 	public BoardVO selectByNo(int no);
 	public int edit(BoardVO boardVo);
 	public int delete(int no);
+	public int getTotalRecord(SearchVO searchVo);
 
 }

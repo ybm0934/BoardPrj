@@ -22,6 +22,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.board.model.BoardService;
 import com.board.model.BoardVO;
+import com.common.PaginationInfo;
 import com.common.SearchVO;
 import com.common.Utility;
 
@@ -41,10 +42,24 @@ public class BoardController {
 	public String list(@ModelAttribute SearchVO searchVo, Model model) {
 		logger.info("글 목록 조회 파라미터 searchVo = {}", searchVo);
 
+		PaginationInfo pagingInfo = new PaginationInfo();
+		pagingInfo.setBlockSize(Utility.BLOCK_SIZE);
+		pagingInfo.setRecordCountPerPage(Utility.RECORD_COUNT_PER_PAGE);
+		pagingInfo.setCurrentPage(searchVo.getCurrentPage());
+		
+		searchVo.setRecordCountPerPage(Utility.RECORD_COUNT_PER_PAGE);
+		searchVo.setFirstRecordIndex(pagingInfo.getFirstRecordIndex());
+		logger.info("셋팅 후 searchVo={}", searchVo);
+
 		List<BoardVO> list = boardService.list(searchVo);
 		logger.info("글 목록 조회 결과 list.size = {}", list.size());
 
+		int totalRecord = boardService.getTotalRecord(searchVo);
+		pagingInfo.setTotalRecord(totalRecord);
+		logger.info("전체 레코드 개수={}", totalRecord);
+
 		model.addAttribute("list", list);
+		model.addAttribute("pageVo", pagingInfo);
 
 		return "board/list";
 	}
@@ -64,7 +79,8 @@ public class BoardController {
 	}
 
 	@RequestMapping(value = "/write.do", method = RequestMethod.POST)
-	public String write_post(@ModelAttribute BoardVO boardVo, MultipartHttpServletRequest request) throws IOException {
+	public String write_post(@ModelAttribute BoardVO boardVo, Model model, MultipartHttpServletRequest request)
+			throws IOException {
 		logger.info("글쓰기 처리 파라미터 boardVo = {}", boardVo);
 
 		// 파일 업로드 처리
@@ -94,7 +110,19 @@ public class BoardController {
 		int cnt = boardService.write(boardVo);
 		logger.info("글쓰기 처리 결과 cnt={}", cnt);
 
-		return "redirect:/board/detail.do?no=" + boardVo.getNo();
+		String msg = "", url = "";
+		if (cnt > 0) {
+			msg = "글 쓰기 성공";
+			url = "/board/list.do";
+		} else {
+			msg = "글 쓰기 실패";
+			url = "/board/write.do";
+		}
+
+		model.addAttribute("msg", msg);
+		model.addAttribute("url", url);
+
+		return "inc/message";
 	}
 
 	@RequestMapping("/detail.do")

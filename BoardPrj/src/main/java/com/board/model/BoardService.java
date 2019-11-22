@@ -17,5 +17,6 @@ public interface BoardService {
 	public boolean checkPwd(int no, String password);
 	public int edit(BoardVO boardVo);
 	public int delete(int no);
+	public int getTotalRecord(SearchVO searchVo);
 
 }

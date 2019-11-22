@@ -108,7 +108,7 @@
 			<tr>
 				<th colspan="2">
 					<input type="submit" id="subBtn" class="subBtn" value="글쓰기">
-					<input type="reset" id="reBtn" class="reBtn" value="취소">
+					<input type="button" id="reBtn" class="reBtn" value="취소" onclick="history.back()">
 				</th>
 			</tr>
 		</table>

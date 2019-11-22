@@ -52,4 +52,10 @@ public class BoardDAOMybatis implements BoardDAO {
 		return cnt;
 	}
 
+	@Override
+	public int getTotalRecord(SearchVO searchVo) {
+		int cnt = sqlSession.selectOne(namespace + "getTotalRecord", searchVo);
+		return cnt;
+	}
+
 }

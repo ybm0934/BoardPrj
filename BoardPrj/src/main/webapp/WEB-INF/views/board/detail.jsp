@@ -66,6 +66,9 @@
 		<input type="button" id="delete" class="btn" value="삭제">
 		<input type="button" id="list" class="btn" value="목록">
 	</div>
+	<div class="">
+	
+	</div>
 </div>
 </body>
 </html>
