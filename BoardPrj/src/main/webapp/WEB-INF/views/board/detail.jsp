@@ -6,6 +6,20 @@
 <head>
 <meta charset="UTF-8">
 <title>상세보기</title>
+<link rel="stylesheet" type="text/css" href="<c:url value='/css/detail.css'/>" />
+<script type="text/javascript">
+	$(document).ready(function(){
+		$("#edit").click(function(){
+			location.href="<c:url value='/board/confirm.do?no=" + ${param.no} + "'/>";
+		});
+		$("#delete").click(function(){
+			location.href="<c:url value='/board/delete1.do?no=" + ${param.no} + "'/>";
+		});
+		$("#list").click(function(){
+			location.href="<c:url value='/board/list.do'/>";
+		});
+	});
+</script>
 </head>
 <body>
 <h1>글 상세보기</h1>

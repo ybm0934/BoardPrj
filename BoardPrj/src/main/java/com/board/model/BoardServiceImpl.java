@@ -113,4 +113,25 @@ public class BoardServiceImpl implements BoardService {
 		return boardDao.selectByNo(no);
 	}
 
+	@Override
+	public boolean checkPwd(int no, String password) {
+		BoardVO boardVo = boardDao.selectByNo(no);
+		String dbPwd = boardVo.getPassword();
+		boolean result = false;
+		if (password.equals(dbPwd)) {
+			result = true;
+		}
+		return result;
+	}
+
+	@Override
+	public int edit(BoardVO boardVo) {
+		return boardDao.edit(boardVo);
+	}
+
+	@Override
+	public int delete(int no) {
+		return boardDao.delete(no);
+	}
+
 }

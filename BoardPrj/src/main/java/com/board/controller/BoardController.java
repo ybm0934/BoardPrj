@@ -1,9 +1,12 @@
 package com.board.controller;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
@@ -31,6 +34,9 @@ public class BoardController {
 	@Autowired
 	private BoardService boardService;
 
+	@Resource(name = "fileUploadProperties")
+	Properties fileuploadProperties;
+
 	@RequestMapping("/list.do")
 	public String list(@ModelAttribute SearchVO searchVo, Model model) {
 		logger.info("글 목록 조회 파라미터 searchVo = {}", searchVo);
@@ -44,15 +50,15 @@ public class BoardController {
 	}
 
 	@RequestMapping(value = "/write.do", method = RequestMethod.GET)
-	public String write_get(HttpServletRequest request, Model model) {
+	public String write_get(BoardVO boardVo, HttpServletRequest request, Model model) {
 		logger.info("글쓰기 화면");
 
-		BoardVO vo = Utility.getIp2(request);
-		logger.info("ip 정보 조회 vo = {}", vo);
+		boardVo = Utility.getIp2(boardVo, request);
+		logger.info("ip 정보 조회 vo = {}", boardVo);
 
-		model.addAttribute("ip", vo.getIp());
-		model.addAttribute("port", vo.getPort());
-		model.addAttribute("browser", vo.getBrowser());
+		model.addAttribute("ip", boardVo.getIp());
+		model.addAttribute("port", boardVo.getPort());
+		model.addAttribute("browser", boardVo.getBrowser());
 
 		return "board/write";
 	}
@@ -119,12 +125,112 @@ public class BoardController {
 		}
 
 		logger.info("파일정보 결과 fileInfo={}", fileInfo);
-		
+
 		model.addAttribute("vo", boardVo);
 		model.addAttribute("fileInfo", fileInfo);
-		
+
 		return "board/detail";
 
+	}
+
+	@RequestMapping("/confirm.do")
+	public String confirm(@RequestParam(defaultValue = "0") int no, Model model) {
+		logger.info("비밀번호 확인창 파라미터 no={}", no);
+
+		return "board/confirm";
+	}
+
+	@RequestMapping("/edit1.do")
+	public String edit1(@ModelAttribute BoardVO boardVo, Model model, HttpServletRequest request) {
+		logger.info("수정 화면 파라미터 boardVo={}", boardVo);
+
+		String view = "";
+		if (boardService.checkPwd(boardVo.getNo(), boardVo.getPassword())) {
+			boardVo = boardService.selectByNo(boardVo.getNo());
+			logger.info("수정 화면 불러오기 결과, boardVo={}", boardVo);
+
+			boardVo = Utility.getIp2(boardVo, request);
+			logger.info("ip 정보 조회 vo = {}", boardVo);
+
+			model.addAttribute("ip", boardVo.getIp());
+			model.addAttribute("port", boardVo.getPort());
+			model.addAttribute("browser", boardVo.getBrowser());
+
+			model.addAttribute("vo", boardVo);
+			view = "board/edit";
+		} else {
+			model.addAttribute("msg", "비밀번호가 일치하지 않습니다.");
+			model.addAttribute("url", "/board/confirm.do?no=" + boardVo.getNo());
+			view = "inc/message";
+		}
+
+		return view;
+	}
+
+	@RequestMapping("/edit2.do")
+	public String edit2(@ModelAttribute BoardVO boardVo, Model model) {
+		logger.info("수정 처리 파라미터 boardVo={}", boardVo);
+
+		int cnt = boardService.edit(boardVo);
+		logger.info("수정 처리 결과 cnt = {}", cnt);
+
+		String msg = "", url = "/board/detail.do?no=" + boardVo.getNo();
+		if (cnt > 0) {
+			msg = "글 수정 성공";
+		} else {
+			msg = "글 수정 실패";
+		}
+
+		model.addAttribute("msg", msg);
+		model.addAttribute("url", url);
+
+		return "inc/message";
+	}
+
+	@RequestMapping("/delete1.do")
+	public String delete1(@RequestParam(defaultValue = "0") int no, Model model) {
+		logger.info("비밀번호 확인창 파라미터 no={}", no);
+
+		return "board/delete";
+	}
+
+	@RequestMapping("/delete2.do")
+	public String delete2(@ModelAttribute BoardVO boardVo, Model model, HttpServletRequest request) {
+		logger.info("글 삭제 파라미터 boardVo = {}", boardVo);
+
+		String view = "";
+		if (boardService.checkPwd(boardVo.getNo(), boardVo.getPassword())) {
+			boardVo = boardService.selectByNo(boardVo.getNo());
+			// 파일 삭제
+			String uploadLastPath = fileuploadProperties.getProperty("file.upload.path");
+			String savePath1 = request.getSession().getServletContext().getRealPath(uploadLastPath);
+			String savePath = fileuploadProperties.getProperty("file.upload.path.test");
+			logger.info("savePath1 ={}, savePath ={}", savePath1, savePath);
+			// 업로드된 파일이 있는 경우에만 삭제
+			if (boardVo.getFileName() != null && !boardVo.getFileName().isEmpty()) {
+				File myfile = new File(savePath, boardVo.getFileName());
+				if (myfile.exists()) {
+					boolean flag = myfile.delete();
+					logger.info("파일 삭제 여부 : " + flag);
+				}
+			}
+
+			int cnt = boardService.delete(boardVo.getNo());
+			logger.info("글 삭제 처리 결과 cnt={}", cnt);
+
+			model.addAttribute("msg", "글 삭제 성공");
+			model.addAttribute("url", "/board/list.do");
+
+			view = "inc/message";
+
+		} else {
+			model.addAttribute("msg", "비밀번호가 일치하지 않습니다.");
+			model.addAttribute("url", "/board/delete1.do?no=" + boardVo.getNo());
+
+			view = "inc/message";
+		}
+
+		return view;
 	}
 
 }

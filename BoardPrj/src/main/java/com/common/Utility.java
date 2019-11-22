@@ -11,6 +11,7 @@ import javax.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 
 import com.board.controller.BoardController;
 import com.board.model.BoardVO;
@@ -67,9 +68,7 @@ public class Utility {
 	}
 
 	// 아이피 가져오기2
-	public static BoardVO getIp2(HttpServletRequest request) {
-
-		BoardVO vo = new BoardVO();
+	public static BoardVO getIp2(@ModelAttribute BoardVO vo, HttpServletRequest request) {
 
 		InetAddress inet;
 

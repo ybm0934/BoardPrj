@@ -14,5 +14,8 @@ public interface BoardService {
 	public List<Map<String, Object>> fileupload(HttpServletRequest request) throws Exception;
 	public int downCount(int no);
 	public BoardVO selectByNo(int no);
+	public boolean checkPwd(int no, String password);
+	public int edit(BoardVO boardVo);
+	public int delete(int no);
 
 }

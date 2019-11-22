@@ -25,5 +25,15 @@
 	<select id="selectByNo" parameterType="int" resultType="BoardVO">
 		select * from board where no = #{no}
 	</select>
+	
+	<update id="edit" parameterType="BoardVO">
+		update board
+		set title = #{title}, memberid = #{memberid}, password = #{password}, content = #{content}, ip = #{ip}, port = #{port}, browser = #{browser}
+		where no = #{no}
+	</update>
+	
+	<delete id="delete" parameterType="int">
+		delete from board where no = #{no}
+	</delete>
 
 </mapper>

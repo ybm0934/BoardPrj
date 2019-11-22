@@ -40,4 +40,16 @@ public class BoardDAOMybatis implements BoardDAO {
 		return boardVo;
 	}
 
+	@Override
+	public int edit(BoardVO boardVo) {
+		int cnt = sqlSession.update(namespace + "edit", boardVo);
+		return cnt;
+	}
+
+	@Override
+	public int delete(int no) {
+		int cnt = sqlSession.delete(namespace + "delete", no);
+		return cnt;
+	}
+
 }
