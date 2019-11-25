@@ -3,16 +3,17 @@
 
 <mapper namespace="config.mybatis.mapper.oracle.ajax">
 
-	<select id="selectAll" parameterType="searchVO" resultType="AjaxVO">
+	<select id="selectAll" parameterType="SearchVO" resultType="PlayerVO">
 		select * from player
-		<if test="searchKeyword != null">
-			where name like #{searchKeyword}
-		</if>
+		<!-- <if test="searchKeyword != null">
+			where name like '%' || #{searchKeyword} || '%'
+		</if> -->
+		order by no desc
 	</select>
 	
-	<insert id="write" parameterType="AjaxVO">
-		insert into player
-		values(#{name}, #{age}, #{gender}, #{email})
+	<insert id="write" parameterType="PlayerVO">
+		insert into player(no, name, age, gender, email)
+		values(player_seq.nextval, #{name}, #{age}, #{gender}, #{email})
 	</insert>
-	
+
 </mapper>

@@ -60,6 +60,7 @@ public class BoardController {
 
 		model.addAttribute("list", list);
 		model.addAttribute("pageVo", pagingInfo);
+		model.addAttribute("searchVo", searchVo);
 
 		return "board/list";
 	}

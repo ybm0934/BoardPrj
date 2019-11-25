@@ -14,9 +14,6 @@
 </script>
 </head>
 <body>
-<form name="frmPage" action="<c:url value='/board/list.do'/>" method="post">
-	<input type="text" name="currentPage">
-</form>
 <div>
 	<h1>게시판</h1>
 	<div class="list_tbl_body">
@@ -81,14 +78,30 @@
 			</tbody>
 		</table>
 	</div>
-	<div class="search_div">
-		<select name="searchCondition" class="searchCondition">
-			<option value="title" selected="selected">제목</option>
-			<option value="content" selected="selected">내용</option>
-			<option value="memberid" selected="selected">작성자</option>
-		</select>
-		<input type="text" class="searchKeyword" name="searchKeyword" placeholder="검색">
-		<input type="submit" name="searchBtn" class="searchBtn" value="검색">
+	<div class="searchDiv">
+		<form name="frmPage" action="<c:url value='/board/list.do'/>" method="post">
+			<select name="searchCondition">
+				<option value="title" 
+					<c:if test="${'title' == searchVo.searchCondition}">
+						selected="selected"
+					</c:if>
+					>제목</option>
+				<option value="content" 
+					<c:if test="${'content' == searchVo.searchCondition}">
+						selected="selected"
+					</c:if>
+					>내용</option>
+				<option value="memberid" 
+					<c:if test="${'memberid' == searchVo.searchCondition}">
+						selected="selected"
+					</c:if>
+					>작성자</option>
+			</select>
+			<input type="text" class="searchKeyword" name="searchKeyword" placeholder="검색어 입력" value="${searchVo.searchKeyword}">
+			<input type="submit" name="searchBtn" value="검색">
+			<br>
+			<input type="text" name="currentPage" value="1">
+		</form>
 	</div>
 	<div class="write_div">
 		<input type="button" class="write_btn" value="글쓰기" onclick="location.href='<c:url value='/board/write.do'/>'">

@@ -168,6 +168,8 @@
 			<version>${org.aspectj-version}</version>
 		</dependency>
 		
+		<!-- Json -->
+		
 		<!-- Gson  -->		
 		<dependency>
 		    <groupId>com.google.code.gson</groupId>
